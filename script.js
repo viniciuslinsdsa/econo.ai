@@ -116,6 +116,8 @@ function formatarData(dataISO, tipo = 'mini') {
 
 /**
  * Novo fetchBCB: Sempre retorna os dados ordenados cronologicamente (Antigo -> Recente)
+ * CORREÇÃO DE BUG: Implementa reversão com cópia para evitar side effects (modificação in-place)
+ * que causavam o bug de ordem em ambientes de produção.
  */
 async function fetchBCB(codigo, n = 100, reverseOrder = true) { 
   const proxies = [
@@ -131,7 +133,10 @@ async function fetchBCB(codigo, n = 100, reverseOrder = true) {
   
   if (cached && cacheTime && (Date.now() - parseInt(cacheTime)) < 3600000) {
     setTimeout(() => fetchBCB(codigo, n), 100);
-    return JSON.parse(cached);
+    // Dados do cache (Newest -> Oldest, ordem do BCB)
+    const dadosEmCache = JSON.parse(cached);
+    // Retorna na ordem solicitada, usando cópia para evitar side-effects
+    return reverseOrder ? [...dadosEmCache].reverse() : dadosEmCache;
   }
   
   const hoje = new Date();
@@ -175,11 +180,16 @@ async function fetchBCB(codigo, n = 100, reverseOrder = true) {
           return d.data && d.valor && d.data.substring(0, 10) <= hojeString;
         });
 
-        // NOVO: Inverte e salva no cache, e sempre retorna na ordem cronológica (Antigo -> Recente)
-        const dadosOrdenados = reverseOrder ? dadosFiltrados.reverse() : dadosFiltrados;
+        // dadosFiltrados está na ordem BCB (Mais Recente -> Mais Antigo)
+        
+        // 1. Criamos a versão invertida (Antigo -> Recente) em uma cópia
+        const dadosInvertidos = [...dadosFiltrados].reverse();
+        
+        // 2. Determinamos o retorno na ordem solicitada (renderHome pede Antigo -> Recente)
+        const dadosOrdenados = reverseOrder ? dadosInvertidos : dadosFiltrados;
 
-        if (dadosOrdenados.length > 0) {
-            // Salvamos no cache na ordem do BCB (mais novo -> mais antigo)
+        if (dadosFiltrados.length > 0) {
+            // Salvamos no cache SEMPRE a ordem original do BCB (Mais Novo -> Mais Antigo)
             localStorage.setItem(cacheKey, JSON.stringify(dadosFiltrados));
             localStorage.setItem(`${cacheKey}_time`, Date.now().toString());
         }
@@ -193,9 +203,10 @@ async function fetchBCB(codigo, n = 100, reverseOrder = true) {
   }
   
   if (cached) {
-    // Se usou cache, ele está na ordem do BCB (Mais Recente -> Mais Antigo), então inverte
+    // Se usou cache, ele está na ordem do BCB (Mais Recente -> Mais Antigo)
     const dadosEmCache = JSON.parse(cached);
-    return reverseOrder ? dadosEmCache.reverse() : dadosEmCache;
+    // Retorna na ordem solicitada, usando cópia para evitar side-effects
+    return reverseOrder ? [...dadosEmCache].reverse() : dadosEmCache;
   }
   
   console.error(`Falha total ao carregar série ${codigo}`);
