@@ -17,7 +17,7 @@ const METODOLOGIAS = {
     "Varejo": {
         titulo: "Volume de Vendas no Varejo",
         explicacao: "Mede a evolução do volume de vendas do comércio varejista, refletindo o consumo das famílias e a confiança na economia. A variação mensal é um indicador de curto prazo do dinamismo do comércio.",
-        calculo: "Medida pela <strong>Pesquisa Mensal de Comércio (PMC)</strong> do <strong>IBGE</strong>. Assim como a Produção Industrial, utiliza o método de índice de quantidade (Laspeyres) para o cálculo da variação mensal real (descontada a inflação)."
+        calculo: "Medida pela <strong>Pesquisa Mensal de Comércio (PMC)</strong> do <strong>IBGE)</strong>. Assim como a Produção Industrial, utiliza o método de índice de quantidade (Laspeyres) para o cálculo da variação mensal real (descontada a inflação)."
     },
     "IPCA (inflação oficial)": {
         titulo: "IPCA (Índice Nacional de Preços ao Consumidor Amplo)",
@@ -488,7 +488,7 @@ function filterInterestRateData(data) {
 }
 
 
-// FUNÇÃO SHOW CATEGORY (REVISADA SEM REFERÊNCIAS A JUROS)
+// FUNÇÃO SHOW CATEGORY (REVISADA COM O NOVO HTML DE EMPILHAMENTO)
 async function showCategory(key) {
   setActiveButton(key);
   document.getElementById("home").classList.add("hidden");
@@ -625,23 +625,23 @@ async function showCategory(key) {
         ${insightIA}
     </div>
     
-    <div style="display:flex; gap:30px; margin-bottom: 50px; width: 100%; max-width: 1000px;">
-        <div class="explicacao" style="flex:1; background:var(--bg); border:2px solid ${cat.cor}50; border-radius:12px; padding:25px; font-size:1.15rem; line-height:1.9;">
+    <div class="two-column-mobile-stack" style="margin-bottom: 50px; width: 100%; max-width: 1000px;">
+        
+        <div class="card" style="border-color:${cat.cor}50; background:var(--bg); border-width:2px; padding:25px; line-height:1.8;">
             <h3 style="color:${cat.cor}; font-size:1.3rem; margin-bottom: 16px; display:flex; align-items:center; gap:10px;">
                 📌 Entenda o indicador
               </h3>
             ${cat.explicacao}
         </div>
     
-        <div class="impacto" style="flex:1; background:var(--bg); border:2px solid ${cat.cor}50; border-radius:12px; padding:25px; font-size:1.15rem; line-height:1.9;">
+        <div class="card" style="border-color:${cat.cor}50; background:var(--bg); border-width:2px; padding:25px; line-height:1.8;">
               <h3 style="color:${cat.cor}; font-size:1.3rem; margin-bottom: 16px; display:flex; align-items:center; gap:10px;">
                 💰 Como isso afeta seu bolso
               </h3>
               ${cat.impacto}
         </div>
     </div>
-
-    
+        
     <h2 style="font-family:'Space Grotesk'; font-size:1.8rem; color:${cat.cor}; margin-top:50px; margin-bottom:15px; text-align: center;">
         Gráfico: ${chartTitle}
     </h2>
