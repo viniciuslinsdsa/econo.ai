@@ -109,20 +109,29 @@ nav button:active {
   transform: scale(0.95); 
 }
 
-/* CORREÇÃO DO BUG DE COR DO BOTÃO ATIVO */
+/* CORREÇÃO DO BUG DE COR DO BOTÃO ATIVO - REFORÇADA */
 nav button.active { 
   /* Fundo sólido com a cor de destaque (azul/ciano) */
   background: var(--accent); 
-  /* A COR DO TEXTO DEVE SER PRETA PARA CONTRASTE NO BOTÃO AZUL */
-  color: #000; 
+  /* Cor do texto: forçando o preto */
+  color: #000 !important; 
   font-weight: 700;
   box-shadow: 0 0 15px rgba(0,245,255,0.5);
-  /* A remoção destas duas propriedades garante que o texto não seja "cortado" pelo gradiente */
-  -webkit-text-fill-color: #000; 
-  background-clip: padding-box; 
+  /* REFORÇO: Desativa completamente o clip e o preenchimento por gradiente */
+  -webkit-text-fill-color: #000 !important; 
+  background-clip: padding-box !important; 
 }
 
-/* NOVO: Regra de Especificidade Extra para Garantir a Cor Sólida no Botão Ativo */
+/* Regra para remover qualquer gradiente de texto residual no botão */
+nav button.active h3,
+nav button.active .value,
+nav button.active span {
+    /* Garante que nenhum elemento filho herde a transparência do texto */
+    -webkit-text-fill-color: #000 !important;
+    color: #000 !important;
+}
+
+/* NOVO: Regra de Especificidade Extra para Garantir a Cor Sólida no Botão Ativo ao Hover */
 nav button.active:hover {
     color: #000 !important;
     -webkit-text-fill-color: #000 !important;
