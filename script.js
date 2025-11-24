@@ -64,43 +64,91 @@ const METODOLOGIAS = {
 const CATEGORIAS = {
   atividade: {
     titulo: "Atividade Econômica", cor: "#00d4ff",
-    explicacao: "São os indicadores que mostram se o Brasil está <strong>produzindo e vendendo mais ou menos</strong>. PIB alto = país mais rico. IBC-Br em alta = economia aquecida. Produção industrial forte = fábricas a todo vapor. Varejo crescendo = brasileiro comprando mais.",
+    explicacao: `Os indicadores mostram se o Brasil está <strong>produzindo e vendendo mais ou menos</strong>, sendo o principal sinal da riqueza nacional.
+        <ul>
+            <li><strong>PIB alto:</strong> Indica que o país está mais rico, sendo a soma de todos os bens e serviços finais produzidos.</li>
+            <li><strong>IBC-Br em alta:</strong> É a prévia mensal do BCB que sinaliza economia aquecida.</li>
+            <li><strong>Produção Industrial forte:</strong> Significa que as fábricas estão a todo vapor, com alta demanda.</li>
+            <li><strong>Varejo crescendo:</strong> Reflete o aumento do consumo das famílias e a confiança na economia.</li>
+        </ul>
+    `,
     series: { 
       "PIB (índice)": { codigo: 22109, unidade: "Índice (2018=100)" }, 
       "IBC-Br (prévia do PIB)": { codigo: 24363, unidade: "Índice (2003=100)" }, 
       "Produção Industrial": { codigo: 21859, unidade: "% (variação mensal)" }, 
       "Varejo": { codigo: 1455, unidade: "% (variação mensal)" } 
     },
-    impacto: "Quando esses números sobem, geralmente aparecem <strong>mais vagas de emprego</strong> e as empresas faturam mais. É o momento em que a economia está aquecida e as oportunidades aumentam. Quando caem, o mercado esfria e é hora de ter mais cautela."
+    impacto: `Quando a atividade sobe, o mercado aquece e as oportunidades aumentam:
+        <ul>
+            <li>Criação de <strong>mais vagas de emprego</strong> e aumento do faturamento empresarial.</li>
+            <li>A economia está aquecida, o que melhora a confiança para investir e consumir.</li>
+            <li>Quando os indicadores caem, o mercado esfria, exigindo mais cautela em finanças pessoais e empresariais.</li>
+        </ul>
+    `
   },
   inflacao: {
     titulo: "Inflação", cor: "#ff6b6b",
-    explicacao: "É a velocidade com que <strong>os preços estão subindo</strong>. Inflação em 0,5% ao mês significa que, na média, tudo está 0,5% mais caro. O IPCA é o índice oficial que o Banco Central persegue - a meta é manter em torno de <strong>3% ao ano</strong> (0,25% ao mês).",
+    explicacao: `A inflação mede a velocidade com que <strong>os preços estão subindo</strong>, corroendo o poder de compra. O objetivo do Banco Central é mantê-la controlada, em torno de 3% ao ano.
+        <ul>
+            <li><strong>IPCA:</strong> É o índice oficial, usado como meta. Mede o preço para famílias de 1 a 40 salários mínimos.</li>
+            <li><strong>IGP-M:</strong> É sensível ao Dólar e ao atacado (commodities). Conhecido como a 'inflação do aluguel'.</li>
+            <li><strong>INPC:</strong> Mede o custo de vida para a parcela de baixa renda (1 a 5 salários mínimos).</li>
+        </ul>
+    `,
     series: { 
       "IPCA (inflação oficial)": { codigo: 433, unidade: "% (variação mensal)" }, 
       "IGP-M (aluguéis)": { codigo: 189, unidade: "% (variação mensal)" }, 
       "INPC (baixa renda)": { codigo: 188, unidade: "% (variação mensal)" } 
     },
-    impacto: "Quando a inflação dispara, <strong>seu salário perde valor</strong> - você compra menos com o mesmo dinheiro. Combustível, comida, aluguel... tudo fica mais caro. Inflação controlada é bom para todos, pois mantém o poder de compra estável."
+    impacto: `A inflação afeta diretamente o poder de compra e os custos de vida:
+        <ul>
+            <li>Quando a inflação dispara, <strong>seu salário perde valor</strong> (você compra menos com o mesmo dinheiro).</li>
+            <li>Combustível, comida e aluguel ficam mais caros, pressionando o orçamento.</li>
+            <li>A inflação controlada é crucial, pois mantém o poder de compra estável e permite o planejamento financeiro.</li>
+        </ul>
+    `
   },
   emprego: {
     titulo: "Emprego", cor: "#39ff94",
-    explicacao: "Esses dados mostram <strong>quantas pessoas estão trabalhando</strong> e quanto elas ganham. Taxa de desemprego alta = muita gente procurando emprego. Renda média em alta = trabalhador ganhando mais e com mais poder de compra.",
+    explicacao: `Esses dados rastreiam <strong>quantas pessoas estão trabalhando</strong> e quanto elas ganham, sendo vitais para a saúde da economia.
+        <ul>
+            <li><strong>Taxa de Desemprego:</strong> Uma taxa alta significa que muitas pessoas estão na força de trabalho, mas desocupadas.</li>
+            <li><strong>Renda Média:</strong> Mostra o valor médio real (descontada a inflação) recebido pelos trabalhadores.</li>
+        </ul>
+    `,
     series: { 
       "Taxa de Desemprego": { codigo: 24369, unidade: "%" }, 
       "Renda Média do Trabalho": { codigo: 24379, unidade: "R$" } 
     },
-    impacto: "Desemprego baixo significa que <strong>é mais fácil conseguir emprego</strong> e os trabalhadores têm mais poder para negociar salários melhores. Quando a renda média sobe, as famílias consomem mais, movimentando a economia inteira."
+    impacto: `A dinâmica do emprego é um termômetro direto para o consumo e bem-estar social:
+        <ul>
+            <li>Desemprego baixo facilita conseguir emprego e dá poder de negociação para salários melhores.</li>
+            <li>Quando a <strong>renda média real sobe</strong>, as famílias consomem mais, impulsionando a atividade econômica.</li>
+            <li>Desemprego alto limita o consumo e aumenta a insegurança econômica.</li>
+        </ul>
+    `
   },
   externo: {
     titulo: "Setor Externo", cor: "#06d6a0",
-    explicacao: "Mostram <strong>como o Brasil se relaciona economicamente com outros países</strong>. Dólar em alta = real fraco. Balança comercial positiva = exportamos mais do que importamos. Reservas internacionais = dinheiro guardado para emergências.",
+    explicacao: `Mostra <strong>como o Brasil interage economicamente com o mundo</strong>, essencialmente pela entrada e saída de moeda estrangeira.
+        <ul>
+            <li><strong>Dólar em alta:</strong> Indica um Real fraco, tornando produtos e serviços importados mais caros.</li>
+            <li><strong>Balança Comercial Positiva:</strong> Superávit, significa que exportamos (vendemos) mais do que importamos (compramos).</li>
+            <li><strong>Reservas Internacionais:</strong> Ativos guardados (Dólar, Euro) que servem como "colchão" para estabilidade em crises cambiais.</li>
+        </ul>
+    `,
     series: { 
       "Dólar Comercial": { codigo: 3698, unidade: "R$/US$" }, 
       "Balança Comercial": { codigo: 22707, unidade: "US$ Milhões" }, 
       "Reservas Internacionais": { codigo: 3546, unidade: "US$ Milhões" } 
     },
-    impacto: "Dólar alto encarece <strong>viagens internacionais, eletrônicos importados, e até a gasolina</strong> (porque o petróleo é cotado em dólar). Por outro lado, favorece quem exporta. Dólar baixo tem o efeito inverso: bom para consumidor, ruim para exportador."
+    impacto: `O câmbio influencia desde o preço da gasolina até as viagens internacionais:
+        <ul>
+            <li><strong>Dólar alto:</strong> Encarece viagens e eletrônicos, além de gerar pressão inflacionária nos insumos cotados em Dólar (commodities).</li>
+            <li><strong>Dólar alto:</strong> Por outro lado, favorece o setor de exportação (o produto brasileiro fica mais barato lá fora).</li>
+            <li><strong>Dólar baixo:</strong> É bom para o consumidor e ruim para o exportador, tendo o efeito inverso.</li>
+        </ul>
+    `
   }
 };
 
