@@ -122,6 +122,14 @@ nav button.active {
   background-clip: padding-box; 
 }
 
+/* NOVO: Regra de Especificidade Extra para Garantir a Cor Sólida no Botão Ativo */
+nav button.active:hover {
+    color: #000 !important;
+    -webkit-text-fill-color: #000 !important;
+    background-clip: padding-box !important;
+}
+
+
 /* Aplicação da Animação de Entrada ao Hero */
 .hero { 
   text-align: center; 
@@ -830,6 +838,7 @@ nav button.active {
     }
     
     /* Alinhamento de Texto: corrige o espaçamento irregular (rios) */
+    /* IMPORTANTE: As listas (ul/li) inseridas no JS ajudam MUITO mais que estas regras. */
     .explicacao p, .impacto p {
         font-size: 0.95rem;
         line-height: 1.6;
