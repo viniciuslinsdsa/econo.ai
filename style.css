@@ -826,6 +826,24 @@ nav button.active {
         margin: 20px auto; /* Menor margem */
     }
     
+    /* ***************************************************************** */
+    /* 10. CORREÇÃO PRINCIPAL: Empilhamento dos blocos de explicação */
+    /* Garante que o contêiner inline no JS se torne vertical no mobile */
+    .explainer-container {
+        flex-direction: column !important; /* FORÇA o empilhamento vertical */
+        gap: 20px !important; 
+        padding: 0 15px; 
+    }
+    
+    /* Garante que os blocos internos ocupem a largura total e anula o flex:1 */
+    .explainer-container .explicacao,
+    .explainer-container .impacto {
+        width: 100% !important;
+        min-width: 100% !important;
+        flex: none !important; 
+    }
+    /* ***************************************************************** */
+    
     /* 7. Alinhamento da Categoria */
     .series-grid {
         grid-template-columns: 1fr; 
@@ -871,10 +889,8 @@ nav button.active {
     .main-footer {
         margin-top: 30px; /* Rodapé mais próximo do conteúdo */
     }
-}
-
-/* Regra extra do original, mantida para evitar conflitos */
-@media (max-width: 768px) {
+    
+    /* Regra do original, mantida para evitar conflitos */
     #category-content > div:nth-child(3) {
         flex-direction: column;
         gap: 20px !important;
