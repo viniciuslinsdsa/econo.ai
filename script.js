@@ -129,9 +129,8 @@ function parseBCBDateToISO(dateStr) {
 }
 
 /**
- * Novo fetchBCB com ORDENAÇÃO FORÇADA
- * Agora convertemos tudo para ISO e ordenamos por data ASCENDENTE (Antigo -> Novo)
- * Isso impede que os gráficos fiquem invertidos independentemente de como a API responde.
+ * Novo fetchBCB com ORDENAÇÃO FORÇADA E CACHE BUSTER
+ * Adicionamos '_v2' ao cacheKey para invalidar dados antigos que estavam errados.
  */
 async function fetchBCB(codigo, n = 100) { 
   const proxies = [
@@ -141,7 +140,10 @@ async function fetchBCB(codigo, n = 100) {
   ];
   
   const apiUrl = `https://api.bcb.gov.br/dados/serie/bcdata.sgs.${codigo}/dados/ultimos/${n}?formato=json`;
-  const cacheKey = `bcb_${codigo}`;
+  
+  // ALTERAÇÃO IMPORTANTE: Mudamos a chave para _v2 para ignorar caches antigos e invertidos
+  const cacheKey = `bcb_${codigo}_v2`; 
+  
   const cached = localStorage.getItem(cacheKey);
   const cacheTime = localStorage.getItem(`${cacheKey}_time`);
   
@@ -213,6 +215,7 @@ async function fetchBCB(codigo, n = 100) {
     }
   }
   
+  // Se falhar tudo, tenta usar cache antigo se existir (último recurso)
   if (cached) {
     return JSON.parse(cached);
   }
