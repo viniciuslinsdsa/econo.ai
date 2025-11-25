@@ -435,6 +435,18 @@ nav button.active {
 }
 
 /* ************************************************* */
+/* NOVO: Classe para o Container de Informações */
+/* ************************************************* */
+.info-container {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 50px;
+    width: 100%;
+    max-width: 1000px;
+}
+
+
+/* ************************************************* */
 /* TOOLTIP (Quick Win) */
 /* ************************************************* */
 .tooltip-container {
@@ -533,7 +545,6 @@ nav button.active {
     padding-bottom: 50px; 
     animation: fadeInSlideUp 0.6s ease-out backwards;
     animation-delay: 0.2s;
-    width: 100%; /* Garantir que o contêiner ocupa a largura total para alinhar */
 }
 
 /* 2. Garante que os títulos sejam centralizados */
@@ -615,19 +626,19 @@ nav button.active {
 }
 
 .main-indicator-box .status-tag.positive {
-    background: rgba(0, 255, 136, 0.2); 
+    background: var(--green)20; 
     color: var(--green);
     border: 1px solid var(--green);
 }
 
 .main-indicator-box .status-tag.negative {
-    background: rgba(255, 77, 110, 0.2);
+    background: var(--red)20;
     color: var(--red);
     border: 1px solid var(--red);
 }
 
 .main-indicator-box .status-tag.stable {
-    background: rgba(155, 163, 191, 0.2);
+    background: var(--text-muted)20;
     color: var(--text-muted);
     border: 1px solid var(--text-muted);
 }
@@ -729,12 +740,11 @@ nav button.active {
     /* 1. Ajuste do corpo para compensar a navegação */
     body {
         /* Adiciona padding no topo para o conteúdo não ficar escondido pela nav */
-        padding-top: 60px; 
-        font-size: 1rem; 
-        line-height: 1.5; 
+        padding-top: 80px; 
+        font-size: 1rem;
     }
 
-    /* 2. Transformar a navegação em uma barra de rolagem horizontal (Correção de corte) */
+    /* 2. Transformar a navegação em uma barra de rolagem horizontal */
     nav {
         left: 0;
         transform: none;
@@ -746,28 +756,23 @@ nav button.active {
         overflow-y: hidden;
         white-space: nowrap; 
         justify-content: flex-start; 
-        border: none; 
+        border-top: none; 
+        border-left: none; 
+        border-right: none;
         border-bottom: 1px solid var(--accent); 
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5); 
         gap: 8px;
     }
     
-    nav button {
-        padding: 8px 12px;
-        min-height: 40px; 
-        min-width: auto; 
-        font-size: 0.95rem;
-    }
-    
-    /* 3. Ajuste do Hero Section (Mais Compacto) */
+    /* 3. Ajuste do Hero Section */
     .hero {
-        padding: 100px 20px 30px; 
+        padding: 100px 20px 40px; 
     }
     .hero h1 {
         font-size: clamp(3rem, 10vw, 9rem);
     }
     .subtitle {
-        font-size: 1.1rem; 
+        font-size: 1.2rem;
     }
 
     /* 4. Padding geral do Container */
@@ -775,130 +780,61 @@ nav button.active {
         padding: 0 15px; 
     }
     
-    /* 5. Ajustes na seção de conteúdo principal (Removendo Excesso de Espaço Vertical) */
+    /* 5. Ajustes na seção de conteúdo principal */
     .about-section {
-        padding: 25px 20px; 
+        padding: 30px 20px; 
         margin: 30px 0;
-    }
-    
-    .about-section h2 {
-      font-size: 2rem; 
-      margin-bottom: 15px;
-    }
-    
-    .about-section p {
-      font-size: 1rem;
-      line-height: 1.6;
-    }
-    
-    .features-grid {
-        gap: 15px; 
-    }
-    
-    .feature-card {
-        padding: 20px; 
     }
     
     .grid {
         grid-template-columns: 1fr; 
         gap: 20px; 
-        margin-top: 20px; 
-        margin-bottom: 50px; 
-    }
-    
-    .card {
-        padding: 25px; 
-    }
-    
-    .card h3 {
-        font-size: 1.4rem;
-        margin: 10px 0 5px 0;
-    }
-    
-    .value {
-        font-size: 2.5rem; 
-        margin: 10px 0;
+        margin-top: 30px;
     }
 
-    /* 6. Ajuste da análise e explicações (Mais Compacto) */
-    .ia-analysis, .explicacao {
+    /* 6. Ajuste da análise e explicações */
+    .ia-analysis, .explicacao, .impacto {
         padding: 20px;
         font-size: 1rem;
-        margin: 20px auto; 
     }
     
-    /* 7. Alinhamento da Categoria (Garante centralização total) */
-    #category-content {
-        align-items: center; 
-        width: 100%;
+    #category-content > div:nth-child(3) {
+        flex-direction: column;
+        gap: 20px !important;
+    }
+
+    /* NOVO: Ajuste do container de Informações para Mobile */
+    .info-container {
+        flex-direction: column;
     }
     
-    #category-content > h1 {
-        font-size: 2.5rem;
-        margin-bottom: 15px;
+    /* 7. Alinhamento da Categoria */
+    .series-grid {
+        grid-template-columns: 1fr; 
+        max-width: none;
     }
     
-    /* 8. Estilo de Empilhamento para as 2 Colunas (Entenda/Afeta) */
-    /* *** NOVO ESTILO: USE ESTA CLASSE NO CONTÊINER PAI DAS DUAS COLUNAS *** */
-    .two-column-mobile-stack {
-        display: flex;
-        flex-direction: column; /* FORÇA O EMPILHAMENTO */
-        gap: 20px; 
-        width: 100%;
-        max-width: 600px; /* Limita a largura para melhor leitura */
-        margin: 20px 0;
-    }
-    
-    .two-column-mobile-stack > div {
-        width: 100%; /* Garante que os filhos usem a largura total */
-        padding: 30px 20px; /* Padding interno consistente para os cards */
-        box-sizing: border-box;
-        line-height: 1.6;
-    }
-    
-    .two-column-mobile-stack h3 {
-        font-size: 1.4rem; /* Títulos menores */
-        margin-bottom: 10px;
-    }
-    
-    .two-column-mobile-stack p {
-        font-size: 1rem; /* Texto menor e mais direto */
-        line-height: 1.5;
-    }
-    
-    /* 9. Ajuste do indicador principal (main-indicator-box) */
+    /* 8. Ajuste do indicador principal (main-indicator-box) */
     .main-indicator-box {
         flex-direction: column; 
         align-items: center; 
         padding: 20px;
         max-width: 100%;
-        margin: 20px 0; /* Menor margem */
     }
     
-    .main-indicator-value {
-        font-size: 3rem !important; 
+    .main-indicator-value-group {
+        align-items: center; 
     }
     
-    /* 10. Gráfico (Chart.js) */
-    #bigchart {
-        max-height: 300px !important; 
-        height: 300px !important;
-        margin-top: 20px;
+    .main-indicator-value-label {
+        text-align: center;
     }
     
-    .series-grid {
-        grid-template-columns: 1fr; 
-        max-width: none;
-        margin: 30px 0;
+    .main-indicator-box .status-tag {
+        margin-top: 15px;
     }
     
-    .main-footer {
-        margin-top: 30px; 
-    }
-    
-    /* Regra extra do original, mantida para evitar conflitos */
-    #category-content > div:nth-child(3) {
-        flex-direction: column;
-        gap: 20px !important;
+    .main-indicator-box > div:last-child {
+        text-align: center !important; 
     }
 }
