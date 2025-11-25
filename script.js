@@ -502,7 +502,7 @@ async function showCategory(key) {
         ${insightIA}
     </div>
     
-    <div style="display:flex; gap:30px; margin-bottom: 50px; width: 100%; max-width: 1000px;">
+    <div class="info-container">
         <div class="explicacao" style="flex:1; background:var(--bg); border:2px solid ${cat.cor}50; border-radius:12px; padding:25px; font-size:1.15rem; line-height:1.9;">
             <h3 style="color:${cat.cor}; font-size:1.3rem; margin-bottom: 16px; display:flex; align-items:center; gap:10px;">
                 📌 Entenda o indicador
