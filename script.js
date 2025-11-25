@@ -17,7 +17,7 @@ const METODOLOGIAS = {
     "Varejo": {
         titulo: "Volume de Vendas no Varejo",
         explicacao: "Mede a evolução do volume de vendas do comércio varejista, refletindo o consumo das famílias e a confiança na economia. A variação mensal é um indicador de curto prazo do dinamismo do comércio.",
-        calculo: "Medida pela <strong>Pesquisa Mensal de Comércio (PMC)</strong> do <strong>IBGE)</strong>. Assim como a Produção Industrial, utiliza o método de índice de quantidade (Laspeyres) para o cálculo da variação mensal real (descontada a inflação)."
+        calculo: "Medida pela <strong>Pesquisa Mensal de Comércio (PMC)</strong> do <strong>IBGE</strong>. Assim como a Produção Industrial, utiliza o método de índice de quantidade (Laspeyres) para o cálculo da variação mensal real (descontada a inflação)."
     },
     "IPCA (inflação oficial)": {
         titulo: "IPCA (Índice Nacional de Preços ao Consumidor Amplo)",
@@ -115,7 +115,8 @@ function formatarData(dataISO, tipo = 'mini') {
 }
 
 /**
- * Novo fetchBCB: Sempre retorna os dados ordenados cronologicamente (Antigo -> Recente)
+ * NOVO: Função fetchBCB CORRIGIDA
+ * Sempre retorna os dados ordenados cronologicamente (Antigo -> Recente)
  */
 async function fetchBCB(codigo, n = 100, reverseOrder = true) { 
   const proxies = [
@@ -129,9 +130,14 @@ async function fetchBCB(codigo, n = 100, reverseOrder = true) {
   const cached = localStorage.getItem(cacheKey);
   const cacheTime = localStorage.getItem(`${cacheKey}_time`);
   
+  // 1. TENTAR USAR O CACHE
   if (cached && cacheTime && (Date.now() - parseInt(cacheTime)) < 3600000) {
     setTimeout(() => fetchBCB(codigo, n), 100);
-    return JSON.parse(cached);
+    // Se usou cache, ele está na ordem do BCB (Mais Recente -> Mais Antigo)
+    const dadosEmCache = JSON.parse(cached);
+    // Aplicamos a inversão (reverseOrder é TRUE por padrão)
+    const dadosOrdenadosParaRetorno = reverseOrder ? dadosEmCache.reverse() : dadosEmCache;
+    return dadosOrdenadosParaRetorno;
   }
   
   const hoje = new Date();
@@ -150,6 +156,7 @@ async function fetchBCB(codigo, n = 100, reverseOrder = true) {
     }
   }
   
+  // 2. TENTAR FAZER O FETCH DA API
   for (let proxyIndex = 0; proxyIndex < proxies.length; proxyIndex++) {
     const proxyUrl = proxies[proxyIndex](apiUrl);
     for (let tentativa = 0; tentativa < 2; tentativa++) {
@@ -175,16 +182,21 @@ async function fetchBCB(codigo, n = 100, reverseOrder = true) {
           return d.data && d.valor && d.data.substring(0, 10) <= hojeString;
         });
 
-        // NOVO: Inverte e salva no cache, e sempre retorna na ordem cronológica (Antigo -> Recente)
-        const dadosOrdenados = reverseOrder ? dadosFiltrados.reverse() : dadosFiltrados;
+        // A série do BCB vem do Mais Recente -> Mais Antigo.
+        // Criamos uma cópia, e se reverseOrder for TRUE, aplicamos o reverse na cópia para o retorno.
+        const dadosOrdenadosParaRetorno = [...dadosFiltrados]; 
 
-        if (dadosOrdenados.length > 0) {
-            // Salvamos no cache na ordem do BCB (mais novo -> mais antigo)
+        if (reverseOrder) {
+            dadosOrdenadosParaRetorno.reverse();
+        }
+
+        if (dadosFiltrados.length > 0) {
+            // Salvamos no cache na ordem do BCB (Mais Recente -> Mais Antigo)
             localStorage.setItem(cacheKey, JSON.stringify(dadosFiltrados));
             localStorage.setItem(`${cacheKey}_time`, Date.now().toString());
         }
         
-        return dadosOrdenados;
+        return dadosOrdenadosParaRetorno; // Retorna na ordem Antigo -> Recente (se reverseOrder=true)
       } catch (err) {
         console.warn(`Tentativa ${tentativa + 1} falhou no proxy ${proxyIndex}:`, err.message);
         if (tentativa < 1) await new Promise(resolve => setTimeout(resolve, 500));
@@ -192,10 +204,13 @@ async function fetchBCB(codigo, n = 100, reverseOrder = true) {
     }
   }
   
+  // 3. FALHA TOTAL: TENTAR CARREGAR O CACHE NOVAMENTE
   if (cached) {
-    // Se usou cache, ele está na ordem do BCB (Mais Recente -> Mais Antigo), então inverte
+    // Se usou cache, ele está na ordem do BCB (Mais Recente -> Mais Antigo)
     const dadosEmCache = JSON.parse(cached);
-    return reverseOrder ? dadosEmCache.reverse() : dadosEmCache;
+    // Aplicamos a inversão (reverseOrder é TRUE por padrão)
+    const dadosOrdenadosParaRetorno = reverseOrder ? dadosEmCache.reverse() : dadosEmCache;
+    return dadosOrdenadosParaRetorno;
   }
   
   console.error(`Falha total ao carregar série ${codigo}`);
@@ -225,7 +240,7 @@ function setActiveButton(page) {
 function gerarInsightIA(key, ultimoValor, variacao, dados) {
     const cat = CATEGORIAS[key];
     
-    const ultimoDadoIndex = dados.length > 0 ? dados.length - 1 : -1;
+    const ultimoDadoIndex = dados.length > 1 ? dados.length - 1 : -1;
 
     if (ultimoDadoIndex === -1) {
         return `<p style="font-size:1.15rem;">⚠️ Ops! Não consegui acessar dados recentes para <strong>${cat.titulo}</strong>. Tente em instantes.</p>`;
@@ -350,8 +365,8 @@ async function renderHome() {
   for (const { key, cat, primeira, dadosBrutos, dadosGrafico } of resultados) {
     
     // NOVO CÁLCULO DE VARIAÇÃO: usando os dados já ordenados
-    const ultimo = dadosBrutos[0] || {};
-    const anterior = dadosBrutos[1] || {};
+    const ultimo = dadosBrutos[dadosBrutos.length - 1] || {};
+    const anterior = dadosBrutos[dadosBrutos.length - 2] || {};
     const valor = parseFloat(ultimo.valor || 0);
     const valorAnterior = parseFloat(anterior.valor || 0);
     const variacao = anterior.valor ? ((valor - valorAnterior) / Math.abs(valorAnterior) * 100).toFixed(2) : 0;
@@ -488,7 +503,7 @@ function filterInterestRateData(data) {
 }
 
 
-// FUNÇÃO SHOW CATEGORY (REVISADA COM O NOVO HTML DE EMPILHAMENTO)
+// FUNÇÃO SHOW CATEGORY (REVISADA SEM REFERÊNCIAS A JUROS)
 async function showCategory(key) {
   setActiveButton(key);
   document.getElementById("home").classList.add("hidden");
@@ -625,23 +640,23 @@ async function showCategory(key) {
         ${insightIA}
     </div>
     
-    <div class="two-column-mobile-stack" style="margin-bottom: 50px; width: 100%; max-width: 1000px;">
-        
-        <div class="card" style="border-color:${cat.cor}50; background:var(--bg); border-width:2px; padding:25px; line-height:1.8;">
+    <div style="display:flex; gap:30px; margin-bottom: 50px; width: 100%; max-width: 1000px;">
+        <div class="explicacao" style="flex:1; background:var(--bg); border:2px solid ${cat.cor}50; border-radius:12px; padding:25px; font-size:1.15rem; line-height:1.9;">
             <h3 style="color:${cat.cor}; font-size:1.3rem; margin-bottom: 16px; display:flex; align-items:center; gap:10px;">
                 📌 Entenda o indicador
               </h3>
             ${cat.explicacao}
         </div>
     
-        <div class="card" style="border-color:${cat.cor}50; background:var(--bg); border-width:2px; padding:25px; line-height:1.8;">
+        <div class="impacto" style="flex:1; background:var(--bg); border:2px solid ${cat.cor}50; border-radius:12px; padding:25px; font-size:1.15rem; line-height:1.9;">
               <h3 style="color:${cat.cor}; font-size:1.3rem; margin-bottom: 16px; display:flex; align-items:center; gap:10px;">
                 💰 Como isso afeta seu bolso
               </h3>
               ${cat.impacto}
         </div>
     </div>
-        
+
+    
     <h2 style="font-family:'Space Grotesk'; font-size:1.8rem; color:${cat.cor}; margin-top:50px; margin-bottom:15px; text-align: center;">
         Gráfico: ${chartTitle}
     </h2>
