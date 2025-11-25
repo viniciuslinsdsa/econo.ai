@@ -533,12 +533,11 @@ nav button.active {
     padding-bottom: 50px; 
     animation: fadeInSlideUp 0.6s ease-out backwards;
     animation-delay: 0.2s;
-    width: 100%; 
+    width: 100%; /* Garantir que o contêiner ocupa a largura total para alinhar */
 }
 
 /* 2. Garante que os títulos sejam centralizados */
 #category-content > h1 {
-  font-family: 'Space Grotesk', sans-serif; /* Mantenha a fonte correta */
   text-align: center;
 }
 
@@ -827,18 +826,18 @@ nav button.active {
         margin: 20px auto; 
     }
     
-    /* 7. Alinhamento da Categoria (Centralização Garantida) */
+    /* 7. Alinhamento da Categoria (Garante centralização total) */
     #category-content {
         align-items: center; 
         width: 100%;
-        text-align: center; /* NOVO: Garante que o texto dentro do contêiner tente centralizar */
     }
     
     #category-content > h1 {
         font-size: 2.5rem;
         margin-bottom: 15px;
+        /* Correção para quebra de linha visualmente centralizada */
         text-align: center; 
-        padding: 0 10px; 
+        padding: 0 10px; /* Adiciona padding lateral para que o texto não "grude" nas bordas */
         box-sizing: border-box;
     }
     
@@ -876,11 +875,10 @@ nav button.active {
         padding: 20px;
         max-width: 100%;
         margin: 20px 0; 
-        text-align: center; /* NOVO: Garante que o texto interno se centralize */
     }
     
     .main-indicator-value-group {
-        align-items: center; 
+        align-items: center; /* NOVO: Garante que os elementos do valor estejam no centro */
     }
 
     .main-indicator-value-label {
@@ -893,8 +891,9 @@ nav button.active {
     
     .main-indicator-box .status-tag {
         margin-top: 15px;
+        /* NOVO: Garante que a tag de status fique centrada */
         margin-bottom: 0; 
-        /* Mantido display: inline-flex e ajustado para ser centralizado pelo pai (main-indicator-box) */
+        display: inline-flex; /* Garante que ele se comporte como um bloco interno para centralização */
     }
     
     /* 10. Gráfico (Chart.js) */
