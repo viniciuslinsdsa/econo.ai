@@ -115,7 +115,7 @@ function formatarData(dataISO, tipo = 'mini') {
 }
 
 /**
- * NOVO: Função fetchBCB CORRIGIDA
+ * NOVO: Função fetchBCB CORRIGIDA para ordenação
  * Sempre retorna os dados ordenados cronologicamente (Antigo -> Recente)
  */
 async function fetchBCB(codigo, n = 100, reverseOrder = true) { 
@@ -207,7 +207,7 @@ async function fetchBCB(codigo, n = 100, reverseOrder = true) {
   // 3. FALHA TOTAL: TENTAR CARREGAR O CACHE NOVAMENTE
   if (cached) {
     // Se usou cache, ele está na ordem do BCB (Mais Recente -> Mais Antigo)
-    const dadosEmCache = JSON.parse(cached);
+    const dadosEmCache = JSON.SE(cached);
     // Aplicamos a inversão (reverseOrder é TRUE por padrão)
     const dadosOrdenadosParaRetorno = reverseOrder ? dadosEmCache.reverse() : dadosEmCache;
     return dadosOrdenadosParaRetorno;
@@ -367,11 +367,25 @@ async function renderHome() {
     // NOVO CÁLCULO DE VARIAÇÃO: usando os dados já ordenados
     const ultimo = dadosBrutos[dadosBrutos.length - 1] || {};
     const anterior = dadosBrutos[dadosBrutos.length - 2] || {};
-    const valor = parseFloat(ultimo.valor || 0);
+    const valor = parseFloat(ultimo.valor || 0); // Ex: IPCA = 0.09
     const valorAnterior = parseFloat(anterior.valor || 0);
-    const variacao = anterior.valor ? ((valor - valorAnterior) / Math.abs(valorAnterior) * 100).toFixed(2) : 0;
     
-    // TRATAMENTO (REMOVIDO: Resultado Primário)
+    // Variação calculada: Mês atual vs Mês anterior (aceleração/desaceleração)
+    const variacaoCalculada = anterior.valor ? ((valor - valorAnterior) / Math.abs(valorAnterior) * 100) : 0;
+
+    // NOVO: Variável que será exibida na tag de variação (o número pequeno)
+    let valorParaDisplayVariacao = variacaoCalculada; // Por padrão, mostra a aceleração
+    
+    // Tratamento IPCA e demais indicadores que já são variações percentuais.
+    if (key === 'inflacao' || primeira.includes("Variação Mensal")) {
+        // Para o IPCA e outros que já são % M/M-1, a lógica de seta é especial:
+        // A seta indica a ACELERAÇÃO/DESACELERAÇÃO (o variacaoCalculada)
+    } else {
+        // Para os demais (PIB, IBC-Br, etc.), a variação é o próprio cálculo percentual.
+        // A lógica de seta é aplicada abaixo.
+    }
+
+    // O valor principal do card (o número grande) é sempre o valor mais recente (0.09)
     let valorParaFormatar = valor;
     let unidadeParaFormatar = cat.series[primeira].unidade;
 
@@ -379,17 +393,19 @@ async function renderHome() {
     const valorFormatado = formatarValor(valorParaFormatar, unidadeParaFormatar);
     
     // TRATAMENTO LÓGICO DE TENDÊNCIA (PARA DISPLAY DE SETA)
-    let variacaoDisplay = parseFloat(variacao);
-    let isUp = variacaoDisplay >= 0;
+    let isUp = parseFloat(variacaoCalculada) >= 0;
     
     // CORREÇÃO: Invertendo a lógica da seta para o painel principal, mantendo a interpretação econômica
     if (key === 'emprego' && primeira.includes('Desemprego')) {
-        isUp = variacaoDisplay < 0; // Desemprego diminuindo é positivo (seta para baixo)
+        isUp = parseFloat(variacaoCalculada) < 0; // Desemprego diminuindo (aceleração negativa) é positivo (seta para baixo)
     } else if (key === 'inflacao') {
-        isUp = variacaoDisplay < 0; // Inflação diminuindo é positivo (seta para baixo)
+        isUp = parseFloat(variacaoCalculada) < 0; // Inflação desacelerando (aceleração negativa) é positivo (seta para baixo)
     } else if (key === 'externo' && primeira.includes('Dólar')) {
-        isUp = variacaoDisplay < 0; // Dólar caindo é positivo (seta para baixo)
+        isUp = parseFloat(variacaoCalculada) < 0; // Dólar caindo (aceleração negativa) é positivo (seta para baixo)
     } 
+
+    // O valor exibido na tag de variação (o número pequeno) deve ser formatado aqui
+    let variacaoFormatada = Math.abs(parseFloat(valorParaDisplayVariacao)).toFixed(2);
 
 
     html += `
@@ -397,7 +413,7 @@ async function renderHome() {
         <h3>${cat.titulo}</h3>
         <div class="value">${valorFormatado}</div>
         <div class="var ${isUp ? 'up' : 'down'}">
-          ${isNaN(variacao) || variacao == 0 ? "Estável" : (isUp ? '▲' : '▼') + " " + Math.abs(variacao) + "%"}
+          ${isNaN(variacaoCalculada) || parseFloat(variacaoCalculada) == 0 ? "Estável" : (isUp ? '▲' : '▼') + " " + variacaoFormatada + "%"}
         </div>
         <canvas id="mini-${key}" height="100"></canvas>
       </div>`;
