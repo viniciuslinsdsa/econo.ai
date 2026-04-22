@@ -17,61 +17,63 @@
     <button class="nav-btn" data-page="home" onclick="showHome()">🏠 Início</button>
     <button class="nav-btn" data-page="atividade" onclick="showCategory('atividade')">🏭 Atividade</button>
     <button class="nav-btn" data-page="inflacao" onclick="showCategory('inflacao')">🔥 Inflação</button>
-    <!-- REMOVIDO: Botão Juros -->
     <button class="nav-btn" data-page="emprego" onclick="showCategory('emprego')">🧑‍💼 Emprego</button>
     <button class="nav-btn" data-page="externo" onclick="showCategory('externo')">🌐 Setor Externo</button>
   </nav>
 
   <div class="hero">
-    <!-- MUDANÇA 2: Nome da plataforma -->
+    <div class="hero-eyebrow">Dados oficiais do Banco Central • Atualização automática</div>
     <h1>Econo.AI</h1>
-    <p class="subtitle">A economia brasileira explicada por inteligência artificial</p>
-    <p class="by">Criado por <span>Vinícius Arruda</span></p>
+    <p class="subtitle">Os números que movem o Brasil — <em>sem economês</em></p>
+    <p class="by">por <span>Vinícius Arruda</span></p>
   </div>
 
   <div class="container">
     <div id="home">
       <div class="about-section">
-        <h2>🚀 Economia brasileira sem complicação</h2>
-        <!-- MUDANÇA 3: Nome da plataforma no texto -->
-        <p><strong>Econo.AI</strong> é sua ponte para entender a economia do Brasil. Transformamos dados oficiais do Banco Central em análises que fazem sentido para você.</p>
-        
+        <div class="about-header">
+          <h2>O que acontece com a economia afeta você todo dia</h2>
+          <p class="about-lead">O preço da cesta básica, a taxa do financiamento, as vagas no mercado de trabalho — tudo isso tem um número por trás. O <strong>Econo.AI</strong> busca esses números direto do Banco Central e os traduz em linguagem humana.</p>
+        </div>
+
         <div class="features-grid">
           <div class="feature-card">
-            <div class="feature-icon">📊</div>
-            <h3>Dados em Tempo Real</h3>
-            <p>Informações atualizadas direto da API oficial do Banco Central</p>
+            <div class="feature-icon">📡</div>
+            <h3>Fonte oficial</h3>
+            <p>Todos os dados vêm da API pública do Banco Central do Brasil — sem intermediários, sem editoriais.</p>
           </div>
           <div class="feature-card">
-            <div class="feature-icon">🤖</div>
-            <h3>Análises Inteligentes</h3>
-            <p>IA traduz números complexos em insights práticos</p>
+            <div class="feature-icon">🔎</div>
+            <h3>Contexto, não só número</h3>
+            <p>Cada indicador vem acompanhado de explicação sobre o que ele mede e como ele impacta sua vida concreta.</p>
           </div>
           <div class="feature-card">
-            <div class="feature-icon">💡</div>
-            <h3>Impacto Real</h3>
-            <p>Descubra como cada indicador afeta seu bolso</p>
+            <div class="feature-icon">📐</div>
+            <h3>Metodologia aberta</h3>
+            <p>Quer entender como o IPCA é calculado? Cada série tem sua ficha técnica com fonte e fórmula.</p>
           </div>
         </div>
-        
+
         <div class="data-explainer">
-          <h3>📌 Como ler os dados</h3>
+          <h3>Como interpretar os valores</h3>
           <div class="explainer-grid">
             <div class="explainer-item">
-              <strong>Índices (ex: 194,33)</strong>
-              <p>Mostram o crescimento em relação a um ano base. Quanto maior, melhor a economia cresceu.</p>
+              <strong>Índices <span class="example-tag">ex: 194,33</span></strong>
+              <p>Comparam o nível atual com um ano de referência fixado em 100. Um índice de 194 significa que o volume cresceu 94% desde a base.</p>
             </div>
             <div class="explainer-item">
-              <strong>Percentuais (ex: 0,50%)</strong>
-              <p>Variações mensais. Positivo = crescimento. Negativo = queda.</p>
+              <strong>Percentuais <span class="example-tag">ex: 0,50%</span></strong>
+              <p>Variação de um mês para o outro, já com ajuste sazonal. Positivo indica expansão; negativo, retração.</p>
             </div>
             <div class="explainer-item">
-              <strong>Valores monetários (ex: R$ 3.000)</strong>
-              <p>Valores absolutos em reais ou dólares.</p>
+              <strong>Valores monetários <span class="example-tag">ex: R$ 3.200</span></strong>
+              <p>Valores absolutos em reais ou dólares americanos, sem deflacionamento, conforme divulgado pelo BCB.</p>
             </div>
           </div>
         </div>
       </div>
+
+      <div class="section-label">Panorama atual</div>
       <div class="grid" id="cards"></div>
     </div>
 
@@ -81,11 +83,21 @@
     </div>
   </div>
 
-  <!-- NOVO: Seção de Rodapé -->
   <footer class="main-footer">
     <div class="container">
-      <p>&copy; 2026 Econo.AI - Todos os direitos reservados.</p>
-      <p class="ia-attribution">Desenvolvido por agentes de Inteligência Artificial com supervisão humana.</p>
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <span class="footer-logo">Econo.AI</span>
+          <p>Dados econômicos do Brasil em linguagem acessível.</p>
+        </div>
+        <div class="footer-meta">
+          <p>Fonte: <a href="https://dadosabertos.bcb.gov.br" target="_blank" rel="noopener">API pública do Banco Central do Brasil</a></p>
+          <p class="footer-disclaimer">Os valores são divulgados com a periodicidade original de cada série. Nenhum dado é editorializado ou alterado.</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2026 Econo.AI · por Vinícius Arruda</span>
+      </div>
     </div>
   </footer>
 
