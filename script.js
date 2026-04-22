@@ -64,43 +64,43 @@ const METODOLOGIAS = {
 const CATEGORIAS = {
   atividade: {
     titulo: "Atividade Econômica", cor: "#00d4ff",
-    explicacao: "São os indicadores que mostram se o Brasil está <strong>produzindo e vendendo mais ou menos</strong>. PIB alto = país mais rico. IBC-Br em alta = economia aquecida. Produção industrial forte = fábricas a todo vapor. Varejo crescendo = brasileiro comprando mais.",
+    explicacao: "Esses indicadores medem o <strong>pulso da produção nacional</strong>. O PIB é a fotografia anual da riqueza gerada; o IBC-Br é o raio-X mensal que antecipa o resultado. Quando a produção industrial avança e o varejo cresce, a economia está em expansão — empresas contratam mais, salários sobem e o crédito se afrouxa.",
     series: { 
       "PIB (índice)": { codigo: 22109, unidade: "Índice (2018=100)" }, 
       "IBC-Br (prévia do PIB)": { codigo: 24363, unidade: "Índice (2003=100)" }, 
       "Produção Industrial": { codigo: 21859, unidade: "% (variação mensal)" }, 
       "Varejo": { codigo: 1455, unidade: "% (variação mensal)" } 
     },
-    impacto: "Quando esses números sobem, geralmente aparecem <strong>mais vagas de emprego</strong> e as empresas faturam mais. É o momento em que a economia está aquecida e as oportunidades aumentam. Quando caem, o mercado esfria e é hora de ter mais cautela."
+    impacto: "Na prática: quando a atividade econômica cresce, surgem <strong>mais vagas, mais crédito e mais oportunidade</strong>. Quando recua, o mercado de trabalho esfria, empresas adiam investimentos e o consumo das famílias cai. É o ciclo econômico funcionando — e saber onde ele está te ajuda a tomar decisões melhores."
   },
   inflacao: {
     titulo: "Inflação", cor: "#ff6b6b",
-    explicacao: "É a velocidade com que <strong>os preços estão subindo</strong>. Inflação em 0,5% ao mês significa que, na média, tudo está 0,5% mais caro. O IPCA é o índice oficial que o Banco Central persegue - a meta é manter em torno de <strong>3% ao ano</strong> (0,25% ao mês).",
+    explicacao: "Inflação é a <strong>velocidade com que os preços sobem</strong>. O IPCA é o termômetro oficial usado pelo Banco Central para definir a política monetária — a meta vigente é de 3% ao ano, com tolerância até 4,5%. O IGP-M reflete mais o atacado e as commodities; o INPC, o custo de vida de quem ganha até 5 salários mínimos.",
     series: { 
       "IPCA (inflação oficial)": { codigo: 433, unidade: "% (variação mensal)" }, 
       "IGP-M (aluguéis)": { codigo: 189, unidade: "% (variação mensal)" }, 
       "INPC (baixa renda)": { codigo: 188, unidade: "% (variação mensal)" } 
     },
-    impacto: "Quando a inflação dispara, <strong>seu salário perde valor</strong> - você compra menos com o mesmo dinheiro. Combustível, comida, aluguel... tudo fica mais caro. Inflação controlada é bom para todos, pois mantém o poder de compra estável."
+    impacto: "Quando a inflação corre acima da meta, o Banco Central sobe os juros para desaquecer a economia — <strong>crédito fica mais caro, financiamentos encarecem</strong> e o consumo cai. No dia a dia, isso aparece na conta de mercado, no reajuste do aluguel (IGP-M) e na pressão sobre o salário real. Inflação sob controle é condição básica para o poder de compra não se deteriorar."
   },
   emprego: {
     titulo: "Emprego", cor: "#39ff94",
-    explicacao: "Esses dados mostram <strong>quantas pessoas estão trabalhando</strong> e quanto elas ganham. Taxa de desemprego alta = muita gente procurando emprego. Renda média em alta = trabalhador ganhando mais e com mais poder de compra.",
+    explicacao: "O mercado de trabalho é onde a economia se torna concreta para a maioria dos brasileiros. A taxa de desocupação mede a parcela da força de trabalho que está sem emprego e ativamente buscando vaga. A renda média real já desconta a inflação — é o que o trabalhador efetivamente consegue comprar com o salário recebido.",
     series: { 
       "Taxa de Desemprego": { codigo: 24369, unidade: "%" }, 
       "Renda Média do Trabalho": { codigo: 24379, unidade: "R$" } 
     },
-    impacto: "Desemprego baixo significa que <strong>é mais fácil conseguir emprego</strong> e os trabalhadores têm mais poder para negociar salários melhores. Quando a renda média sobe, as famílias consomem mais, movimentando a economia inteira."
+    impacto: "Desemprego em queda significa <strong>mais famílias com renda, mais consumo e mais arrecadação</strong> — um ciclo que sustenta o crescimento. Quando a renda média sobe acima da inflação, o trabalhador ganha poder de compra real. O inverso também é verdadeiro: desemprego alto comprime o consumo e tende a puxar salários para baixo."
   },
   externo: {
     titulo: "Setor Externo", cor: "#06d6a0",
-    explicacao: "Mostram <strong>como o Brasil se relaciona economicamente com outros países</strong>. Dólar em alta = real fraco. Balança comercial positiva = exportamos mais do que importamos. Reservas internacionais = dinheiro guardado para emergências.",
+    explicacao: "O setor externo revela <strong>como o Brasil se posiciona no comércio global</strong>. O câmbio reflete a oferta e demanda por dólares no mercado brasileiro — e influencia desde o preço da gasolina até o custo de importar insumos industriais. A balança comercial mostra se o país está ganhando ou perdendo dólares nas trocas com o exterior. As reservas internacionais são o colchão de segurança do BCB.",
     series: { 
       "Dólar Comercial": { codigo: 3698, unidade: "R$/US$" }, 
       "Balança Comercial": { codigo: 22707, unidade: "US$ Milhões" }, 
       "Reservas Internacionais": { codigo: 3546, unidade: "US$ Milhões" } 
     },
-    impacto: "Dólar alto encarece <strong>viagens internacionais, eletrônicos importados, e até a gasolina</strong> (porque o petróleo é cotado em dólar). Por outro lado, favorece quem exporta. Dólar baixo tem o efeito inverso: bom para consumidor, ruim para exportador."
+    impacto: "Dólar alto encarece <strong>importações, combustíveis, eletrônicos e passagens internacionais</strong> — mas beneficia exportadores e quem tem receita em dólar. Superávit na balança comercial significa entrada líquida de divisas, o que ajuda a estabilizar o câmbio. Reservas robustas dão ao BCB munição para intervir em momentos de turbulência no mercado de câmbio."
   }
 };
 
@@ -243,35 +243,60 @@ function setActiveButton(page) {
   }
 }
 
-// FUNÇÃO GERAR INSIGHT IA
+// FUNÇÃO GERAR INSIGHT
 function gerarInsightIA(key, ultimoValor, variacao, dados) {
     const cat = CATEGORIAS[key];
     
-    // Como agora os dados estão garantidamente Antigo -> Novo, o último é o mais recente
     const ultimoDadoIndex = dados.length > 0 ? dados.length - 1 : -1;
 
     if (ultimoDadoIndex === -1) {
-        return `<p style="font-size:1.15rem;">⚠️ Ops! Não consegui acessar dados recentes para <strong>${cat.titulo}</strong>. Tente em instantes.</p>`;
+        return `<p style="font-size:1.05rem; color:var(--text-muted);">⚠️ Não foi possível carregar dados recentes para <strong>${cat.titulo}</strong>. Verifique sua conexão e tente novamente.</p>`;
     }
 
     const ultimaData = dados[ultimoDadoIndex].data; 
     const dataFormatada = formatarData(ultimaData, 'completo');
-    
-    let analise = "";
-    let texto = `<p style="font-size:1.1rem; margin-bottom:12px;">Última Leitura em <strong>${dataFormatada}</strong>: <strong style="color:${cat.cor};">${ultimoValor}</strong> (variação de <strong>${variacao.toFixed(2)}%</strong> em relação ao anterior).</p>`;
-    
-    if (key === 'atividade') {
-        analise = variacao > 0 ? "A economia está em expansão, com produção e vendas em alta. Isso pode indicar um ciclo positivo." : "Há uma desaceleração na atividade, o que pode afetar investimentos.";
-    } else if (key === 'inflacao') {
-        analise = variacao > 0 ? "Pressão inflacionária aumentando, o que pode levar a juros mais altos." : "Inflação controlada, favorável para o consumo.";
-    } 
-    
-    return texto + `<p style="font-size:1.15rem;">${analise}</p>`;
+
+    const varDir = variacao > 0 ? 'subiu' : variacao < 0 ? 'recuou' : 'ficou estável';
+    const varAbs = Math.abs(variacao).toFixed(2);
+
+    const insights = {
+        atividade: {
+            pos: `A leitura de <strong style="color:${cat.cor}">${ultimoValor}</strong> representa expansão em relação ao período anterior. O avanço de ${varAbs}% sugere que o nível de atividade segue em trajetória ascendente — contexto favorável para geração de emprego e maior utilização da capacidade instalada. Acompanhe os próximos meses para confirmar se é tendência ou movimento pontual.`,
+            neg: `A leitura de <strong style="color:${cat.cor}">${ultimoValor}</strong> registrou recuo de ${varAbs}% ante o período anterior. Desaceleração isolada não configura recessão, mas dois ou mais trimestres negativos seguidos são o sinal clássico de contração econômica. Produção industrial e varejo merecem atenção especial nos próximos dados.`,
+            stable: `A leitura de <strong style="color:${cat.cor}">${ultimoValor}</strong> manteve-se praticamente estável. Estabilidade pode indicar acomodação num patamar já atingido ou compasso de espera antes de nova direção — dados de curto prazo ganham relevância para identificar o próximo movimento.`
+        },
+        inflacao: {
+            pos: `O indicador marcou <strong style="color:${cat.cor}">${ultimoValor}</strong>, aceleração de ${varAbs}% frente ao mês anterior. Pressão inflacionária crescente tende a manter o Banco Central vigilante: se o IPCA seguir acima da meta por mais períodos, a resposta costuma ser elevação da taxa Selic — o que encarece crédito e financiamentos.`,
+            neg: `O indicador marcou <strong style="color:${cat.cor}">${ultimoValor}</strong>, desaceleração de ${varAbs}% em relação ao período anterior. Queda nos índices de preços alivia a pressão sobre o poder de compra das famílias e amplia o espaço do BCB para manter ou reduzir os juros — o que favorece consumo e investimento.`,
+            stable: `O indicador marcou <strong style="color:${cat.cor}">${ultimoValor}</strong>, variação mínima frente ao mês anterior. Estabilidade próxima à meta é o cenário ideal para a política monetária: reduz incerteza e permite ao Banco Central agir com mais previsibilidade.`
+        },
+        emprego: {
+            pos: `O mercado de trabalho registrou <strong style="color:${cat.cor}">${ultimoValor}</strong>. A variação de ${varAbs}% no período sinaliza melhora: mais pessoas ocupadas ou renda crescendo significa maior capacidade de consumo das famílias — e, por consequência, mais pressão inflacionária se o crescimento for forte.`,
+            neg: `O mercado de trabalho registrou <strong style="color:${cat.cor}">${ultimoValor}</strong>, deterioração de ${varAbs}% ante o período anterior. Quando o desemprego sobe ou a renda recua, o consumo das famílias tende a retrair — o que pode criar um ciclo de desaceleração que se retroalimenta.`,
+            stable: `O mercado de trabalho registrou <strong style="color:${cat.cor}">${ultimoValor}</strong>, sem variação relevante frente ao período anterior. Estabilidade no emprego reduz incerteza das famílias e tende a sustentar o consumo no patamar atual.`
+        },
+        externo: {
+            pos: `A leitura foi de <strong style="color:${cat.cor}">${ultimoValor}</strong>, alta de ${varAbs}% no período. No setor externo, variações positivas têm leitura ambígua: dólar mais alto favorece exportadores, mas pressiona a inflação de bens importados e encarece insumos industriais. Balança ou reservas em alta, por outro lado, reforçam a posição externa do país.`,
+            neg: `A leitura foi de <strong style="color:${cat.cor}">${ultimoValor}</strong>, recuo de ${varAbs}% no período. Dólar em queda alivia a inflação de itens importados e reduz custo de insumos, mas pode comprimir margens de exportadores. Queda nas reservas merece atenção: sinaliza menor capacidade de intervenção do BCB em eventuais crises cambiais.`,
+            stable: `A leitura foi de <strong style="color:${cat.cor}">${ultimoValor}</strong>, com pouca variação no período. Câmbio estável reduz incerteza para empresas que importam ou exportam e contribui para ancoragem das expectativas de inflação.`
+        }
+    };
+
+    const bloco = insights[key] || {};
+    let analise = '';
+    if (variacao > 0.01) analise = bloco.pos || '';
+    else if (variacao < -0.01) analise = bloco.neg || '';
+    else analise = bloco.stable || '';
+
+    return `
+      <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:16px; letter-spacing:0.04em; text-transform:uppercase; font-weight:600;">Leitura de ${dataFormatada} · variação de ${variacao >= 0 ? '+' : ''}${variacao.toFixed(2)}% ante o período anterior</p>
+      <p style="font-size:1.05rem; line-height:1.8;">${analise}</p>
+    `;
 }
 
 async function renderHome() {
   const container = document.getElementById('cards');
-  container.innerHTML = '<div class="loading">Carregando dados...</div>';
+  container.innerHTML = '<div class="loading">Buscando dados no Banco Central...</div>';
   
   const categorias = Object.entries(CATEGORIAS);
   const resultados = [];
@@ -368,12 +393,19 @@ function showMetodologia(nomeSerie) {
     if (info) {
         const modal = document.createElement('div');
         modal.innerHTML = `
-            <div style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); display:flex; justify-content:center; align-items:center; z-index:9999;">
-                <div style="background:var(--bg-secondary); padding:30px; border-radius:10px; max-width:600px; color:var(--text); box-shadow:0 0 20px rgba(0,0,0,0.5);">
-                    <h3 style="color:#00d4ff; margin-top:0;">${info.titulo}</h3>
-                    <p><strong>Descrição:</strong> ${info.explicacao}</p>
-                    <p><strong>Cálculo Oficial:</strong> ${info.calculo}</p>
-                    <button onclick="this.parentNode.parentNode.remove()" style="margin-top:20px; padding:10px 20px; background:#00d4ff; color:black; border:none; border-radius:5px; cursor:pointer;">Fechar</button>
+            <div style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); display:flex; justify-content:center; align-items:center; z-index:9999; backdrop-filter:blur(6px); padding:20px;">
+                <div style="background:var(--bg-secondary); padding:40px; border-radius:20px; max-width:600px; width:100%; color:var(--text); border:1px solid rgba(0,245,255,0.2); box-shadow:0 0 60px rgba(0,245,255,0.1);">
+                    <div style="font-size:0.7rem; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:var(--text-muted); margin-bottom:10px;">Ficha técnica</div>
+                    <h3 style="color:#00d4ff; margin:0 0 24px; font-family:'Space Grotesk'; font-size:1.5rem; letter-spacing:-0.02em; line-height:1.2;">${info.titulo}</h3>
+                    <div style="margin-bottom:20px;">
+                        <div style="font-size:0.75rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-muted); margin-bottom:8px;">Descrição</div>
+                        <p style="font-size:0.975rem; line-height:1.75; color:var(--text); margin:0;">${info.explicacao}</p>
+                    </div>
+                    <div style="border-top:1px solid var(--border); padding-top:20px; margin-bottom:28px;">
+                        <div style="font-size:0.75rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-muted); margin-bottom:8px;">Metodologia de cálculo</div>
+                        <p style="font-size:0.975rem; line-height:1.75; color:var(--text); margin:0;">${info.calculo}</p>
+                    </div>
+                    <button onclick="this.closest('[style*=\"position:fixed\"]').remove()" style="padding:12px 28px; background:var(--accent); color:#000; border:none; border-radius:10px; cursor:pointer; font-size:0.9rem; font-weight:700; font-family:'Space Grotesk'; letter-spacing:0.04em; transition:opacity 0.2s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">Fechar</button>
                 </div>
             </div>
         `;
@@ -390,7 +422,7 @@ async function showCategory(key) {
 
   const cat = CATEGORIAS[key];
   const content = document.getElementById("category-content");
-  content.innerHTML = `<div class="loading">Carregando ${cat.titulo}...</div>`;
+  content.innerHTML = `<div class="loading">Carregando ${cat.titulo}…</div>`;
 
   let seriesHTML = "<div class='series-grid'>";
   let codigoPrincipal = cat.series[Object.keys(cat.series)[0]].codigo;
@@ -470,7 +502,7 @@ async function showCategory(key) {
         <div style="color:var(--text-muted);font-size:1rem;margin-bottom:8px;">${nome}</div>
         <div style="color:var(--text-muted);font-size:0.85rem;margin-bottom:12px;"><strong>${unidadeSerie}</strong></div>
         <div class="value" style="font-size:2.2rem;font-weight:800;margin:12px 0;color:${cat.cor};">${valorFormatadoSerie}</div>
-        <div onclick="showMetodologia('${nome}')" style="font-size:0.8rem; color: ${cat.cor}; font-weight: bold; margin-top: 10px; cursor:pointer; text-decoration:underline;">(i) Ver Metodologia</div>
+        <div onclick="showMetodologia('${nome}')" style="font-size:0.78rem; color: ${cat.cor}; font-weight:700; margin-top:14px; cursor:pointer; letter-spacing:0.06em; text-transform:uppercase; opacity:0.75; transition:opacity 0.2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.75'">↗ Ficha técnica</div>
         </div>`;
   }
   seriesHTML += "</div>";
@@ -496,23 +528,23 @@ async function showCategory(key) {
     </div>
     
     <div class="ia-analysis" style="--cat-color: ${cat.cor}">
-        <h3 style="color:${cat.cor}; font-size:1.6rem; margin-bottom: 20px; font-family:'Space Grotesk'; display:flex; align-items:center; gap:12px;">
-          🤖 ANÁLISE OPERACIONAL (Econo.AI)
+        <h3 style="color:${cat.cor}; font-size:1.3rem; margin-bottom: 20px; font-family:'Space Grotesk'; display:flex; align-items:center; gap:12px; letter-spacing:-0.02em;">
+          Leitura do indicador
         </h3>
         ${insightIA}
     </div>
     
     <div class="info-container">
-        <div class="explicacao" style="flex:1; background:var(--bg); border:2px solid ${cat.cor}50; border-radius:12px; padding:25px; font-size:1.15rem; line-height:1.9;">
-            <h3 style="color:${cat.cor}; font-size:1.3rem; margin-bottom: 16px; display:flex; align-items:center; gap:10px;">
-                📌 Entenda o indicador
+        <div class="explicacao" style="flex:1; background:var(--bg); border:2px solid ${cat.cor}50; border-radius:12px; padding:25px; font-size:1.05rem; line-height:1.9;">
+            <h3 style="color:${cat.cor}; font-size:1rem; margin-bottom: 16px; display:flex; align-items:center; gap:10px; letter-spacing:0.06em; text-transform:uppercase; font-weight:700;">
+                O que esse indicador mede
             </h3>
             ${cat.explicacao}
         </div>
     
-        <div class="impacto" style="flex:1; background:var(--bg); border:2px solid ${cat.cor}50; border-radius:12px; padding:25px; font-size:1.15rem; line-height:1.9;">
-            <h3 style="color:${cat.cor}; font-size:1.3rem; margin-bottom: 16px; display:flex; align-items:center; gap:10px;">
-                💰 Como isso afeta seu bolso
+        <div class="impacto" style="flex:1; background:var(--bg); border:2px solid ${cat.cor}50; border-radius:12px; padding:25px; font-size:1.05rem; line-height:1.9;">
+            <h3 style="color:${cat.cor}; font-size:1rem; margin-bottom: 16px; display:flex; align-items:center; gap:10px; letter-spacing:0.06em; text-transform:uppercase; font-weight:700;">
+                Como isso afeta seu bolso
             </h3>
             ${cat.impacto}
         </div>
