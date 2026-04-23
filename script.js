@@ -288,98 +288,122 @@ function gerarInsightIA(key, ultimoValor, variacao, dados, primeiraSerie) {
     `;
 }
 
+// Textos de skeleton personalizados por categoria
+const SKELETON_MSGS = {
+  atividade: { emoji: '🏭', msg: 'Consultando dados de produção e PIB...' },
+  inflacao:  { emoji: '🔥', msg: 'Verificando pressões nos preços...' },
+  emprego:   { emoji: '🧑‍💼', msg: 'Buscando dados do mercado de trabalho...' },
+};
+
+function renderSkeletonCard(key, cat) {
+  const sk = SKELETON_MSGS[key] || { emoji: '📊', msg: 'Buscando dados...' };
+  return `
+    <div class="card skeleton-card-wrapper" id="card-${key}" style="border-color: ${cat.cor}30; min-height:220px; display:flex; flex-direction:column; justify-content:space-between;">
+      <div>
+        <h3 style="color:${cat.cor}; margin-bottom:16px;">${cat.titulo}</h3>
+        <div style="display:flex; align-items:center; gap:10px; color:var(--text-muted); font-size:0.95rem;">
+          <span style="font-size:1.4rem; animation: pulse 1.4s ease-in-out infinite;">${sk.emoji}</span>
+          <span>${sk.msg}</span>
+        </div>
+      </div>
+      <div class="skeleton-bar-group" style="margin-top:20px; display:flex; flex-direction:column; gap:8px;">
+        <div class="skeleton-bar" style="height:12px; border-radius:6px; width:60%; background:linear-gradient(90deg, ${cat.cor}15 25%, ${cat.cor}30 50%, ${cat.cor}15 75%); background-size:400px 100%; animation:skeleton-loading 1.4s infinite linear;"></div>
+        <div class="skeleton-bar" style="height:8px; border-radius:6px; width:40%; background:linear-gradient(90deg, ${cat.cor}10 25%, ${cat.cor}20 50%, ${cat.cor}10 75%); background-size:400px 100%; animation:skeleton-loading 1.4s infinite linear; animation-delay:0.2s;"></div>
+        <div class="skeleton-bar" style="height:60px; border-radius:8px; width:100%; background:linear-gradient(90deg, ${cat.cor}08 25%, ${cat.cor}18 50%, ${cat.cor}08 75%); background-size:400px 100%; animation:skeleton-loading 1.4s infinite linear; animation-delay:0.4s; margin-top:4px;"></div>
+      </div>
+    </div>`;
+}
+
+function renderCardHtml(key, cat, valor, variacao, unidade, primeira) {
+  const valorFormatado = formatarValor(valor, unidade);
+  const variacaoDisplay = parseFloat(variacao);
+  const isUp = variacaoDisplay >= 0;
+  let classCor = 'up';
+  if (isUp) {
+    classCor = (key === 'inflacao' || (key === 'emprego' && primeira.includes('Desemprego'))) ? 'down' : 'up';
+  } else {
+    classCor = (key === 'inflacao' || (key === 'emprego' && primeira.includes('Desemprego'))) ? 'up' : 'down';
+  }
+  return `
+    <div class="card" onclick="showCategory('${key}')">
+      <h3>${cat.titulo}</h3>
+      <div class="value">${valorFormatado}</div>
+      <div class="var ${classCor}">
+        ${isNaN(variacao) || variacao == 0 ? "Estável" : (isUp ? '▲' : '▼') + " " + Math.abs(variacao) + "%"}
+      </div>
+      <canvas id="mini-${key}" height="100"></canvas>
+    </div>`;
+}
+
+function renderMiniChart(key, cat, dadosGrafico) {
+  setTimeout(() => {
+    const ctx = document.getElementById(`mini-${key}`);
+    if (ctx && dadosGrafico.length > 1) {
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: dadosGrafico.map(d => formatarData(d.data)),
+          datasets: [{
+            data: dadosGrafico.map(d => parseFloat(d.valor) || 0),
+            borderColor: cat.cor,
+            backgroundColor: cat.cor + '30',
+            tension: 0.4,
+            fill: true,
+            pointRadius: 0,
+            borderWidth: 3
+          }]
+        },
+        options: {
+          plugins: { legend: { display: false }, tooltip: { enabled: false } },
+          scales: { x: { display: false }, y: { display: false } }
+        }
+      });
+    }
+  }, 100);
+}
+
 async function renderHome() {
   const container = document.getElementById('cards');
-  container.innerHTML = '<div class="loading">Buscando dados no Banco Central...</div>';
-  
+
+  // 1. Renderiza skeleton para cada categoria imediatamente
   const categorias = Object.entries(CATEGORIAS);
-  const resultados = [];
-  
-  for (const [key, cat] of categorias) {
+  container.innerHTML = categorias.map(([key, cat]) => renderSkeletonCard(key, cat)).join('');
+
+  // 2. Dispara todas as buscas em paralelo
+  const promises = categorias.map(async ([key, cat]) => {
     const primeira = Object.keys(cat.series)[0];
     const codigo = cat.series[primeira].codigo;
     const unidade = cat.series[primeira].unidade;
-    
+
     const dados = await fetchBCB(codigo, 6);
-    if (dados.length < 2) continue;
-    
+    if (dados.length < 2) return null;
+
     const ultimo = dados[dados.length - 1].valor;
     const penultimo = dados[dados.length - 2].valor;
     const variacao = ((ultimo - penultimo) / penultimo * 100).toFixed(2);
-    
-    // Pega os últimos 5 para o gráfico (Tail)
     const dadosGrafico = dados.slice(-5);
-    
     const ultimoData = dados[dados.length - 1].data;
-    resultados.push({ key, cat, valor: ultimo, variacao, dadosGrafico, unidade, primeira, ultimoData });
-  }
-  
-  let html = '';
-  for (const { key, cat, valor, variacao, dadosGrafico, unidade, primeira, ultimoData } of resultados) {
-    let valorParaFormatar = valor;
-    let unidadeParaFormatar = unidade;
 
+    return { key, cat, valor: ultimo, variacao, dadosGrafico, unidade, primeira, ultimoData };
+  });
 
-    const valorFormatado = formatarValor(valorParaFormatar, unidadeParaFormatar);
-    
-    let variacaoDisplay = parseFloat(variacao);
-    let isUp = variacaoDisplay >= 0;
-    
-    let classCor = 'up'; 
-    
-    if (isUp) { 
-        if (key === 'inflacao' || (key === 'emprego' && primeira.includes('Desemprego'))) {
-             classCor = 'down'; 
-        } else {
-             classCor = 'up'; 
-        }
-    } else { 
-        if (key === 'inflacao' || (key === 'emprego' && primeira.includes('Desemprego'))) {
-             classCor = 'up'; 
-        } else {
-             classCor = 'down'; 
-        }
-    }
+  // 3. Substitui cada skeleton pelo card real conforme cada promise resolve
+  promises.forEach(promise => {
+    promise.then(resultado => {
+      if (!resultado) return;
+      const { key, cat, valor, variacao, dadosGrafico, unidade, primeira } = resultado;
+      const placeholder = document.getElementById(`card-${key}`);
+      if (!placeholder) return;
 
+      const cardHtml = renderCardHtml(key, cat, valor, variacao, unidade, primeira);
+      const temp = document.createElement('div');
+      temp.innerHTML = cardHtml;
+      const newCard = temp.firstElementChild;
+      newCard.style.animation = 'fadeInSlideUp 0.4s ease-out';
+      placeholder.replaceWith(newCard);
 
-    html += `
-      <div class="card" onclick="showCategory('${key}')">
-        <h3>${cat.titulo}</h3>
-        <div class="value">${valorFormatado}</div>
-        <div class="var ${classCor}">
-          ${isNaN(variacao) || variacao == 0 ? "Estável" : (isUp ? '▲' : '▼') + " " + Math.abs(variacao) + "%"}
-        </div>
-        <canvas id="mini-${key}" height="100"></canvas>
-      </div>`;
-  }
-  
-  container.innerHTML = html;
-  
-  resultados.forEach(({ key, cat, dadosGrafico }) => {
-    setTimeout(() => {
-      const ctx = document.getElementById(`mini-${key}`);
-      if (ctx && dadosGrafico.length > 1) {
-        new Chart(ctx, {
-          type: 'line',
-          data: {
-            labels: dadosGrafico.map(d => formatarData(d.data)),
-            datasets: [{
-              data: dadosGrafico.map(d => parseFloat(d.valor) || 0),
-              borderColor: cat.cor,
-              backgroundColor: cat.cor + '30',
-              tension: 0.4,
-              fill: true,
-              pointRadius: 0,
-              borderWidth: 3
-            }]
-          },
-          options: {
-            plugins: { legend: { display: false }, tooltip: { enabled: false } },
-            scales: { x: { display: false }, y: { display: false } }
-          }
-        });
-      }
-    }, 100);
+      renderMiniChart(key, cat, dadosGrafico);
+    });
   });
 }
 
