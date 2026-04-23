@@ -44,21 +44,6 @@ const METODOLOGIAS = {
         explicacao: "Mede o valor médio do rendimento recebido pelas pessoas ocupadas no mercado de trabalho, descontada a inflação (rendimento real). É um indicador crucial do poder de compra da população.",
         calculo: "Calculado pelo <strong>IBGE</strong> através da <strong>PNAD Contínua</strong>. É a média dos rendimentos habitualmente recebidos por todos os trabalhos (principal e secundários) no mês de referência."
     },
-    "Dólar Comercial": {
-        titulo: "Taxa de Câmbio (Dólar Comercial)",
-        explicacao: "É o preço da moeda americana no Brasil, usado como referência para operações de importação e exportação de bens e serviços. Sua flutuação reflete a oferta e demanda por Dólar no país e a confiança na economia.",
-        calculo: "Calculado pelo <strong>Banco Central (BCB)</strong> através da <strong>taxa PTAX</strong>, que é a média das taxas de compra e venda de Dólar informada por um grupo de <strong>dealers</strong> (bancos) a cada dia."
-    },
-    "Balança Comercial": {
-        titulo: "Saldo da Balança Comercial",
-        explicacao: "É a diferença entre o valor total das <strong>Exportações</strong> (vendas do Brasil para o exterior) e o valor total das <strong>Importações</strong> (compra do Brasil do exterior). Um saldo positivo é um superávit (entrou mais dólar do que saiu).",
-        calculo: "Compilado pela <strong>Secretaria de Comércio Exterior (SECEX)</strong>. O saldo é: Valor das Exportações (FOB) - Valor das Importações (FOB)."
-    },
-    "Reservas Internacionais": {
-        titulo: "Reservas Internacionais (Total)",
-        explicacao: "São os ativos em moeda estrangeira (Dólar, Euro, etc.), ouro e direitos especiais de saque (FMI) mantidos pelo Banco Central. Servem como um 'colchão' para o Brasil, garantindo liquidez e estabilidade em crises cambiais.",
-        calculo: "Calculado pelo <strong>Banco Central (BCB)</strong> diariamente, somando o estoque de ativos internacionais disponíveis do país."
-    }
 };
 
 const CATEGORIAS = {
@@ -92,16 +77,6 @@ const CATEGORIAS = {
     },
     impacto: "Desemprego em queda significa <strong>mais famílias com renda, mais consumo e mais arrecadação</strong> — um ciclo que sustenta o crescimento. Quando a renda média sobe acima da inflação, o trabalhador ganha poder de compra real. O inverso também é verdadeiro: desemprego alto comprime o consumo e tende a puxar salários para baixo."
   },
-  externo: {
-    titulo: "Setor Externo", cor: "#06d6a0",
-    explicacao: "O setor externo revela <strong>como o Brasil se posiciona no comércio global</strong>. O câmbio reflete a oferta e demanda por dólares no mercado brasileiro — e influencia desde o preço da gasolina até o custo de importar insumos industriais. A balança comercial mostra se o país está ganhando ou perdendo dólares nas trocas com o exterior. As reservas internacionais são o colchão de segurança do BCB.",
-    series: { 
-      "Dólar Comercial": { codigo: 3698, unidade: "R$/US$" }, 
-      "Balança Comercial": { codigo: 22707, unidade: "US$ Milhões" }, 
-      "Reservas Internacionais": { codigo: 3546, unidade: "US$ Milhões" } 
-    },
-    impacto: "Dólar alto encarece <strong>importações, combustíveis, eletrônicos e passagens internacionais</strong> — mas beneficia exportadores e quem tem receita em dólar. Superávit na balança comercial significa entrada líquida de divisas, o que ajuda a estabilizar o câmbio. Reservas robustas dão ao BCB munição para intervir em momentos de turbulência no mercado de câmbio."
-  }
 };
 
 function formatarData(dataISO, tipo = 'mini') {
@@ -284,11 +259,6 @@ function gerarInsightIA(key, ultimoValor, variacao, dados, primeiraSerie) {
             neg: `A renda média real recuou para <strong style="color:${cat.cor}">${ultimoValor}</strong>, queda de ${varAbs}% ante o período anterior. Quando a renda cai em termos reais, o poder de compra das famílias se deteriora — o orçamento doméstico aperta e o consumo de bens não essenciais costuma ser o primeiro a ser cortado.`,
             stable: `A renda média real se manteve em <strong style="color:${cat.cor}">${ultimoValor}</strong>, sem variação significativa no período. Estabilidade da renda preserva o poder de compra atual, mas não gera impulso adicional de consumo — o mercado segue em compasso de espera.`
         },
-        externo: {
-            pos: `A leitura foi de <strong style="color:${cat.cor}">${ultimoValor}</strong>, alta de ${varAbs}% no período. No setor externo, variações positivas têm leitura ambígua: dólar mais alto favorece exportadores, mas pressiona a inflação de bens importados e encarece insumos industriais. Balança ou reservas em alta, por outro lado, reforçam a posição externa do país.`,
-            neg: `A leitura foi de <strong style="color:${cat.cor}">${ultimoValor}</strong>, recuo de ${varAbs}% no período. Dólar em queda alivia a inflação de itens importados e reduz custo de insumos, mas pode comprimir margens de exportadores. Queda nas reservas merece atenção: sinaliza menor capacidade de intervenção do BCB em eventuais crises cambiais.`,
-            stable: `A leitura foi de <strong style="color:${cat.cor}">${ultimoValor}</strong>, com pouca variação no período. Câmbio estável reduz incerteza para empresas que importam ou exportam e contribui para ancoragem das expectativas de inflação.`
-        }
     };
 
     // Seleciona o bloco correto para emprego conforme a série exibida
@@ -358,13 +328,13 @@ async function renderHome() {
     let classCor = 'up'; 
     
     if (isUp) { 
-        if (key === 'inflacao' || (key === 'emprego' && primeira.includes('Desemprego')) || (key === 'externo' && primeira.includes('Dólar'))) {
+        if (key === 'inflacao' || (key === 'emprego' && primeira.includes('Desemprego'))) {
              classCor = 'down'; 
         } else {
              classCor = 'up'; 
         }
     } else { 
-        if (key === 'inflacao' || (key === 'emprego' && primeira.includes('Desemprego')) || (key === 'externo' && primeira.includes('Dólar'))) {
+        if (key === 'inflacao' || (key === 'emprego' && primeira.includes('Desemprego'))) {
              classCor = 'up'; 
         } else {
              classCor = 'down'; 
@@ -460,8 +430,6 @@ async function showCategory(key) {
       chartTitle = 'Histórico do PIB (Índice)';
   } else if (key === 'emprego') {
       chartTitle = 'Histórico da Taxa de Desemprego';
-  } else if (key === 'externo') {
-      chartTitle = 'Histórico da Taxa de Câmbio (Dólar Comercial)';
   }
   
   const dadosParaVariacao = await fetchBCB(codigoPrincipal, 2); 
@@ -489,8 +457,6 @@ async function showCategory(key) {
   if (key === 'emprego' && primeiraSerie.includes('Desemprego')) {
     isPositive = variacao < 0; 
   } else if (key === 'inflacao') {
-    isPositive = variacao < 0; 
-  } else if (key === 'externo' && primeiraSerie.includes('Dólar')) {
     isPositive = variacao < 0; 
   }
   
