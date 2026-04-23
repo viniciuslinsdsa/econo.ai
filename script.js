@@ -244,7 +244,7 @@ function setActiveButton(page) {
 }
 
 // FUNÇÃO GERAR INSIGHT
-function gerarInsightIA(key, ultimoValor, variacao, dados) {
+function gerarInsightIA(key, ultimoValor, variacao, dados, primeiraSerie) {
     const cat = CATEGORIAS[key];
     
     const ultimoDadoIndex = dados.length > 0 ? dados.length - 1 : -1;
@@ -255,9 +255,11 @@ function gerarInsightIA(key, ultimoValor, variacao, dados) {
 
     const ultimaData = dados[ultimoDadoIndex].data; 
     const dataFormatada = formatarData(ultimaData, 'completo');
-
-    const varDir = variacao > 0 ? 'subiu' : variacao < 0 ? 'recuou' : 'ficou estável';
     const varAbs = Math.abs(variacao).toFixed(2);
+
+    // Para desemprego: variação positiva (subiu) é má notícia; negativa (caiu) é boa.
+    // Para renda: variação positiva é boa notícia; negativa é má.
+    const isDesemprego = key === 'emprego' && primeiraSerie && primeiraSerie.includes('Desemprego');
 
     const insights = {
         atividade: {
@@ -270,10 +272,17 @@ function gerarInsightIA(key, ultimoValor, variacao, dados) {
             neg: `O indicador marcou <strong style="color:${cat.cor}">${ultimoValor}</strong>, desaceleração de ${varAbs}% em relação ao período anterior. Queda nos índices de preços alivia a pressão sobre o poder de compra das famílias e amplia o espaço do BCB para manter ou reduzir os juros — o que favorece consumo e investimento.`,
             stable: `O indicador marcou <strong style="color:${cat.cor}">${ultimoValor}</strong>, variação mínima frente ao mês anterior. Estabilidade próxima à meta é o cenário ideal para a política monetária: reduz incerteza e permite ao Banco Central agir com mais previsibilidade.`
         },
-        emprego: {
-            pos: `O mercado de trabalho registrou <strong style="color:${cat.cor}">${ultimoValor}</strong>. A variação de ${varAbs}% no período sinaliza melhora: mais pessoas ocupadas ou renda crescendo significa maior capacidade de consumo das famílias — e, por consequência, mais pressão inflacionária se o crescimento for forte.`,
-            neg: `O mercado de trabalho registrou <strong style="color:${cat.cor}">${ultimoValor}</strong>, deterioração de ${varAbs}% ante o período anterior. Quando o desemprego sobe ou a renda recua, o consumo das famílias tende a retrair — o que pode criar um ciclo de desaceleração que se retroalimenta.`,
-            stable: `O mercado de trabalho registrou <strong style="color:${cat.cor}">${ultimoValor}</strong>, sem variação relevante frente ao período anterior. Estabilidade no emprego reduz incerteza das famílias e tende a sustentar o consumo no patamar atual.`
+        emprego_desemprego: {
+            // variacao > 0 = desemprego subiu = ruim
+            pos: `A taxa de desocupação avançou para <strong style="color:${cat.cor}">${ultimoValor}</strong>, alta de ${varAbs}% ante o período anterior. Desemprego em alta comprime a renda das famílias, reduz o consumo e tende a diminuir o poder de barganha dos trabalhadores nas negociações salariais. Se a tendência persistir, o reflexo aparece no varejo e na arrecadação tributária nos meses seguintes.`,
+            neg: `A taxa de desocupação recuou para <strong style="color:${cat.cor}">${ultimoValor}</strong>, queda de ${varAbs}% ante o período anterior. Menos desemprego significa mais famílias com renda regular, o que sustenta o consumo e a arrecadação. Mercados de trabalho apertados também tendem a pressionar salários para cima — o que pode, com defasagem, alimentar a inflação de serviços.`,
+            stable: `A taxa de desocupação se manteve em <strong style="color:${cat.cor}">${ultimoValor}</strong>, sem variação relevante no período. Estabilidade no mercado de trabalho reduz incerteza das famílias e tende a sustentar o consumo no patamar atual — sem impulso adicional, mas também sem deterioração.`
+        },
+        emprego_renda: {
+            // variacao > 0 = renda subiu = bom
+            pos: `A renda média real avançou para <strong style="color:${cat.cor}">${ultimoValor}</strong>, alta de ${varAbs}% ante o período anterior. Ganho real de renda — acima da inflação — significa que o trabalhador está conseguindo comprar mais com o mesmo contracheque. Esse avanço tende a se refletir no consumo das famílias e na movimentação do varejo nos meses seguintes.`,
+            neg: `A renda média real recuou para <strong style="color:${cat.cor}">${ultimoValor}</strong>, queda de ${varAbs}% ante o período anterior. Quando a renda cai em termos reais, o poder de compra das famílias se deteriora — o orçamento doméstico aperta e o consumo de bens não essenciais costuma ser o primeiro a ser cortado.`,
+            stable: `A renda média real se manteve em <strong style="color:${cat.cor}">${ultimoValor}</strong>, sem variação significativa no período. Estabilidade da renda preserva o poder de compra atual, mas não gera impulso adicional de consumo — o mercado segue em compasso de espera.`
         },
         externo: {
             pos: `A leitura foi de <strong style="color:${cat.cor}">${ultimoValor}</strong>, alta de ${varAbs}% no período. No setor externo, variações positivas têm leitura ambígua: dólar mais alto favorece exportadores, mas pressiona a inflação de bens importados e encarece insumos industriais. Balança ou reservas em alta, por outro lado, reforçam a posição externa do país.`,
@@ -282,14 +291,29 @@ function gerarInsightIA(key, ultimoValor, variacao, dados) {
         }
     };
 
-    const bloco = insights[key] || {};
+    // Seleciona o bloco correto para emprego conforme a série exibida
+    let blocoKey = key;
+    if (key === 'emprego') {
+        blocoKey = isDesemprego ? 'emprego_desemprego' : 'emprego_renda';
+    }
+
+    const bloco = insights[blocoKey] || {};
     let analise = '';
-    if (variacao > 0.01) analise = bloco.pos || '';
-    else if (variacao < -0.01) analise = bloco.neg || '';
-    else analise = bloco.stable || '';
+
+    if (key === 'emprego' && isDesemprego) {
+        // Para desemprego: positivo (subiu) = notícia ruim → usa texto 'pos' (desemprego subiu)
+        // negativo (caiu) = notícia boa → usa texto 'neg' (desemprego caiu)
+        if (variacao > 0.01) analise = bloco.pos || '';
+        else if (variacao < -0.01) analise = bloco.neg || '';
+        else analise = bloco.stable || '';
+    } else {
+        if (variacao > 0.01) analise = bloco.pos || '';
+        else if (variacao < -0.01) analise = bloco.neg || '';
+        else analise = bloco.stable || '';
+    }
 
     return `
-      <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:16px; letter-spacing:0.04em; text-transform:uppercase; font-weight:600;">Leitura de ${dataFormatada} · variação de ${variacao >= 0 ? '+' : ''}${variacao.toFixed(2)}% ante o período anterior</p>
+      <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:16px; letter-spacing:0.04em; text-transform:uppercase; font-weight:600;">Último dado disponível · ${dataFormatada} · variação de ${variacao >= 0 ? '+' : ''}${variacao.toFixed(2)}% ante o período anterior</p>
       <p style="font-size:1.05rem; line-height:1.8;">${analise}</p>
     `;
 }
@@ -316,11 +340,12 @@ async function renderHome() {
     // Pega os últimos 5 para o gráfico (Tail)
     const dadosGrafico = dados.slice(-5);
     
-    resultados.push({ key, cat, valor: ultimo, variacao, dadosGrafico, unidade, primeira });
+    const ultimoData = dados[dados.length - 1].data;
+    resultados.push({ key, cat, valor: ultimo, variacao, dadosGrafico, unidade, primeira, ultimoData });
   }
   
   let html = '';
-  for (const { key, cat, valor, variacao, dadosGrafico, unidade, primeira } of resultados) {
+  for (const { key, cat, valor, variacao, dadosGrafico, unidade, primeira, ultimoData } of resultados) {
     let valorParaFormatar = valor;
     let unidadeParaFormatar = unidade;
 
@@ -453,7 +478,7 @@ async function showCategory(key) {
   let unidadeDisplay = cat.series[primeiraSerie] ? cat.series[primeiraSerie].unidade : '%';
  
   const ultimoValorFormatado = formatarValor(valorDisplay, unidadeDisplay);
-  const insightIA = gerarInsightIA(key, ultimoValorFormatado, variacao, dadosParaVariacao);
+  const insightIA = gerarInsightIA(key, ultimoValorFormatado, variacao, dadosParaVariacao, primeiraSerie);
 
   let tagStatus = "";
   let tagClass = "stable";
@@ -499,10 +524,11 @@ async function showCategory(key) {
 
     seriesHTML += `
       <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;">
-        <div style="color:var(--text-muted);font-size:1rem;margin-bottom:8px;">${nome}</div>
-        <div style="color:var(--text-muted);font-size:0.85rem;margin-bottom:12px;"><strong>${unidadeSerie}</strong></div>
+        <div style="color:var(--text-muted);font-size:1rem;margin-bottom:4px;">${nome}</div>
+        <div style="color:var(--text-muted);font-size:0.8rem;margin-bottom:12px;">${unidadeSerie}</div>
         <div class="value" style="font-size:2.2rem;font-weight:800;margin:12px 0;color:${cat.cor};">${valorFormatadoSerie}</div>
-        <div onclick="showMetodologia('${nome}')" style="font-size:0.78rem; color: ${cat.cor}; font-weight:700; margin-top:14px; cursor:pointer; letter-spacing:0.06em; text-transform:uppercase; opacity:0.75; transition:opacity 0.2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.75'">↗ Ficha técnica</div>
+        <div style="font-size:0.75rem; color:var(--text-muted); margin-bottom:10px; opacity:0.6;">Último disponível: ${ultimoDado ? formatarData(ultimoDado.data, 'completo') : 'N/D'}</div>
+        <div onclick="showMetodologia('${nome}')" style="font-size:0.78rem; color: ${cat.cor}; font-weight:700; margin-top:4px; cursor:pointer; letter-spacing:0.06em; text-transform:uppercase; opacity:0.75; transition:opacity 0.2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.75'">↗ Ficha técnica</div>
         </div>`;
   }
   seriesHTML += "</div>";
@@ -523,7 +549,7 @@ async function showCategory(key) {
         </div>
         <div>
             ${tagStatus}
-            <div style="font-size:0.9rem; color:var(--text-muted); margin-top:10px; text-align:right;">Data: ${formatarData(ultimo.data, 'completo')}</div>
+            <div style="font-size:0.8rem; color:var(--text-muted); margin-top:10px; text-align:right; opacity:0.7;">Último dado disponível: ${formatarData(ultimo.data, 'completo')}</div>
         </div>
     </div>
     
